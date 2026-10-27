@@ -1,0 +1,3 @@
+- insert:
+    - id: bot-toggle
+      name: dsh-bot-toggle
