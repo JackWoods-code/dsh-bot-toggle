@@ -32,6 +32,12 @@ It is a UI layer on top of ds-bot, not a replacement for it: ds-bot keeps runnin
   if ds-bot's controls are missing, the capsule turns amber with an explanation instead of
   silently disappearing
 
+## Screenshots
+
+| Bot surface | Classic (ADE) surface |
+| --- | --- |
+| <img src="assets/screenshot-bot.png" width="480" alt="Bot surface with the Bot / ADE capsule"> | <img src="assets/screenshot-classic.png" width="480" alt="Classic DSH surface with the Bot / ADE capsule"> |
+
 ## Requirements
 
 - DSH Desktop `0.2.1-rc.2` / `0.2.1-rc.3` (tested)

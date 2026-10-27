@@ -32,6 +32,12 @@ ds-bot 自带两套界面，却没有一个常驻开关：在 Bot 界面里只�
 - ds-bot 兼容性探测：能拿到时报告是否加载、版本号；控件缺失时胶囊转琥珀色并说明原因，
   而不是无声消失
 
+## 截图
+
+| Bot 界面 | 经典（ADE）界面 |
+| --- | --- |
+| <img src="assets/screenshot-bot.png" width="480" alt="Bot 界面与 Bot/ADE 胶囊"> | <img src="assets/screenshot-classic.png" width="480" alt="经典 DSH 界面与 Bot/ADE 胶囊"> |
+
 ## 环境要求
 
 - DSH Desktop `0.2.1-rc.2` / `0.2.1-rc.3`（实测）

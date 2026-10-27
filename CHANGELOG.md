@@ -4,6 +4,12 @@ All notable changes to this project. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-10-27
+
+- Add real-interface screenshots (Bot surface / classic surface) and `screenshots.json`.
+- Keep screenshots out of the published plugin tarball.
+- Document the switch in both READMEs with the new screenshots.
+
 ## [0.4.0] — 2026-10-27
 
 ### Added
