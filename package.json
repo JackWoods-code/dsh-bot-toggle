@@ -1,6 +1,6 @@
 {
   "name": "dsh-bot-toggle",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "A floating Bot / ADE switch for the DSH web UI: toggles ds-bot's Bot surface and the classic DSH surface without unloading ds-bot.",
   "license": "MIT",
   "author": "JackWoods-code",
@@ -15,7 +15,11 @@
     "lib/index.js",
     "lib/client.js",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "assets/icon-180.png",
+    "assets/icon.svg"
   ],
   "keywords": [
     "deepseek-harness",
@@ -52,5 +56,9 @@
         "0.2.1-rc.3": "compatible"
       }
     }
+  },
+  "scripts": {
+    "check": "node --check lib/client.js && node --check lib/index.js && node --check test/smoke.mjs",
+    "test": "node --test"
   }
 }

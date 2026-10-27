@@ -2,7 +2,7 @@
 // 用法：在 DSH 窗口打开 DevTools（Cmd+Opt+I），把本文件内容整段粘进 Console 回车。
 // 然后调用 __botProbe.status() / .toBot() / .toClassic()。
 (() => {
-  const log = (...args) => console.log("[solo-probe]", ...args);
+  const log = (...args) => console.log("[bot-probe]", ...args);
   const detect = () =>
     document.querySelector(".bt-account, .bt-side-top")
       ? "bot"
