@@ -1,5 +1,9 @@
 # dsh-bot-toggle
 
+![CI](https://github.com/JackWoods-code/dsh-bot-toggle/actions/workflows/ci.yml/badge.svg)
+![release](https://img.shields.io/github/v/release/JackWoods-code/dsh-bot-toggle)
+![license](https://img.shields.io/github/license/JackWoods-code/dsh-bot-toggle)
+
 一枚常驻的 **Bot / ADE** 分段开关，用来在 DSH Web 界面的两套界面之间切换，**ds-bot 插件保持启用**：
 
 - **Bot** = [ds-bot](https://github.com/Fei2411/DS-Bot) 的 Bot 界面（长期存活 Bot 团队那套界面）

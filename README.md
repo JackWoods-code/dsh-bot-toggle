@@ -1,5 +1,9 @@
 # dsh-bot-toggle
 
+![CI](https://github.com/JackWoods-code/dsh-bot-toggle/actions/workflows/ci.yml/badge.svg)
+![release](https://img.shields.io/github/v/release/JackWoods-code/dsh-bot-toggle)
+![license](https://img.shields.io/github/license/JackWoods-code/dsh-bot-toggle)
+
 A floating **Bot / ADE** switch for the DSH web UI. It flips between the two interfaces that
 [ds-bot](https://github.com/Fei2411/DS-Bot) brings — its **Bot** surface and the classic **ADE**
 interface — with a single click, while **ds-bot stays loaded**.
