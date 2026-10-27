@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="dsh-bot-toggle icon">
+  <rect x="0.5" y="0.5" width="179" height="179" rx="40" fill="#0F172A" stroke="#334155"/>
+  <rect x="28" y="65" width="124" height="50" rx="25" fill="#F8FAFC"/>
+  <rect x="32" y="69" width="56" height="42" rx="21" fill="#F59E0B"/>
+  <path d="M60 71v6" stroke="#0F172A" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="60" cy="69" r="3" fill="#0F172A"/>
+  <rect x="46" y="81" width="28" height="21" rx="7" fill="#0F172A"/>
+  <circle cx="54" cy="89" r="2.5" fill="#F59E0B"/>
+  <circle cx="66" cy="89" r="2.5" fill="#F59E0B"/>
+  <path d="M54 97h12" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+  <path d="M106 80l-12 10 12 10" stroke="#64748B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M140 80l12 10-12 10" stroke="#64748B" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M126 78l-6 24" stroke="#64748B" stroke-width="4" stroke-linecap="round"/>
+</svg>
