@@ -14,6 +14,7 @@ function makeEl(tag) {
   const listeners = {};
   return {
     tagName: tag,
+    id: "",
     children: [],
     parentNode: null,
     className: "",
@@ -76,11 +77,18 @@ function makeEl(tag) {
 
 function makeEnv({ lang = "en-US", bootEntries = null } = {}) {
   const matches = new Map();
+  const created = [];
   const doc = {
     documentElement: { lang },
     head: makeEl("head"),
     body: makeEl("body"),
-    createElement: (tag) => makeEl(tag),
+    createElement: (tag) => {
+      const el = makeEl(tag);
+      created.push(el);
+      return el;
+    },
+    // 0.4.3 起 client.js 用 getElementById 管理临时样式节点（隐身模式）
+    getElementById: (id) => created.find((el) => el.id === id) ?? null,
     addEventListener() {},
     removeEventListener() {},
     querySelector(selector) {
