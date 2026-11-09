@@ -25,7 +25,7 @@ It is a UI layer on top of ds-bot, not a replacement for it: ds-bot keeps runnin
 - One-click switch between **Bot** and **ADE**; the active side is highlighted
 - Available in both surfaces as a fixed overlay, kept clear of the content area
 - Drag it anywhere, snap to an edge; right-click resets to the default position (remembered)
-- Keyboard shortcut `Alt+Shift+B`
+- Keyboard shortcut `Alt+Shift+B` on Windows / Linux, `⌥⇧B` or `⌘⇧B` on macOS
 - Fades after 4 s of no interaction, restores on hover; respects `prefers-reduced-motion`
 - Bilingual UI (Chinese / English) following the page or browser language
 - ds-bot compatibility probe: reports whether ds-bot is loaded and, when obtainable, its version;
@@ -58,7 +58,7 @@ If the plugin page says the change takes effect at the next start, restart DSH.
 
 - Click **Bot** to enter the ds-bot Bot surface, **ADE** to return to the classic DSH interface.
 - Drag the capsule to move it; right-click it to reset the position to the right edge, centered.
-- Press `Alt+Shift+B` to toggle from anywhere.
+- Press `Alt+Shift+B` (on macOS `⌥⇧B` or `⌘⇧B`) to toggle from anywhere.
 
 ## Debugging
 

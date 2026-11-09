@@ -4,6 +4,20 @@ All notable changes to this project. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.4] — 2026-11-09
+
+### Fixed
+
+- **Keyboard shortcut on macOS**: the hotkey used to be matched with `event.key === "b"`,
+  but on macOS Option is a character modifier — `⌥⇧B` reports `key: "ı"`, so the shortcut
+  never fired there (it only worked on Windows, where Alt leaves the character alone).
+  Matching is now done on the physical key (`event.code === "KeyB"`), which is independent
+  of keyboard layout and of what the modifier produces; macOS additionally accepts `⌘⇧B`.
+- Tooltips now name the platform's own modifiers: `⌥⇧B / ⌘⇧B` on macOS, `Alt+Shift+B`
+  elsewhere.
+- Held keys (auto-repeat) and keystrokes typed while an input method is composing are
+  ignored, so holding the shortcut no longer flips the surface back and forth.
+
 ## [0.4.3] — 2026-11-08
 
 ### Added
