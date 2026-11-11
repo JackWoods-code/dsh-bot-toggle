@@ -40,8 +40,8 @@ It is a UI layer on top of ds-bot, not a replacement for it: ds-bot keeps runnin
 
 ## Requirements
 
-- DSH Desktop `0.2.1-rc.2` / `0.2.1-rc.3` (tested)
-- ds-bot installed and enabled (tested with `0.2.2`)
+- DSH Desktop `0.2.1-rc.2` / `0.2.1-rc.3` / `0.2.1-rc.4` / `0.2.2-rc.1`
+- ds-bot installed and enabled (`0.2.2` / `0.2.3` / `0.3.1` tested; `0.3.2` checked against its source)
 
 ## Install
 
@@ -93,9 +93,10 @@ tooltip explains that the plugin may need an update, and `status().dsBot.compati
 
 - **Surface switch only.** ds-bot stays loaded, so ordinary sessions still see ds-bot's tools
   (`list_bots`, `message_bot`, …). To unload ds-bot, disable it on the Plugins page instead.
-- Switching relies on ds-bot's own DOM: `.bt-return`, `.bt-account`, `.bt-account-menu` and the
-  localized *Switch to classic Agent mode* menu item. A ds-bot upgrade may move these; the
-  compatibility probe exists to make that visible rather than silent.
+- Switching relies on ds-bot's own DOM: `.bt-return`, `.bt-account`, `.bt-account-menu`, the
+  localized settings item (`Bot settings`, or `Settings` since 0.3.2) and the settings page's
+  *Classic Agent mode* row. A ds-bot upgrade may move these; the compatibility probe exists to
+  make that visible rather than silent.
 - If neither interface can be detected, the capsule hides after about 1.6 s.
 
 ## Development

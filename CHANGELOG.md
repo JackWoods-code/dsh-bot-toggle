@@ -4,10 +4,16 @@ All notable changes to this project. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.4.4] — 2026-11-09
+## [0.4.4] — 2026-11-11
 
 ### Fixed
 
+- **ds-bot 0.3.2 settings item**: 0.3.2 renamed the account-menu settings item from
+  `Bot settings` to `Settings` (本地化文案「设置」), so the previous matcher missed it and the
+  switch fell through to the full-page-reload fallback. The settings item is now matched by
+  `设置 / Settings` (covering ds-bot 0.2.x–0.3.2), the `errNoMenu` guidance lists both labels,
+  and a DOM-stub regression test walks the whole Bot → classic chain for the old and the new
+  label.
 - **Keyboard shortcut on macOS**: the hotkey used to be matched with `event.key === "b"`,
   but on macOS Option is a character modifier — `⌥⇧B` reports `key: "ı"`, so the shortcut
   never fired there (it only worked on Windows, where Alt leaves the character alone).

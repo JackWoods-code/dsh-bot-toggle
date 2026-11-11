@@ -328,3 +328,65 @@ test("快捷键：macOS 上 ⌥⇧B（key 变成 ı）与 ⌘⇧B 都生效，�
     app.dispose();
   }
 });
+
+// ds-bot 0.3.2 回归：账号菜单里的设置项从「Bot 设置 / Bot settings」改名为「设置 / Settings」，
+// 官方入口和设置页结构都没变。用 DOM 桩走完整的 Bot → 经典 切换链，断言点到了设置页里的
+// 「切换」按钮；文案匹配不上时会落到写 localStorage + 整页刷新的兜底（0.4.4 之前的表现）。
+test("切换：ds-bot 0.3.2 的设置项文案（设置 / Settings）也能走设置页", async () => {
+  const cases = [
+    { lang: "zh-CN", menu: "设置", row: "经典 Agent 模式", action: "切换", tag: "settings-zh-032" },
+    { lang: "en-US", menu: "Settings", row: "Classic Agent mode", action: "Switch", tag: "settings-en-032" },
+    // 0.2.x–0.3.1 的旧文案保留兼容
+    { lang: "zh-CN", menu: "Bot 设置", row: "经典 Agent 模式", action: "切换", tag: "settings-zh-legacy" },
+  ];
+  for (const item of cases) {
+    const env = makeEnv({ lang: item.lang });
+    let switchClicks = 0;
+    let reloads = 0;
+
+    const account = makeEl("button");
+    const menu = makeEl("div");
+    const menuItem = makeEl("button");
+    menuItem.textContent = item.menu;
+    menu._selectors = { '[role="menuitem"]': [menuItem] };
+
+    const scroll = makeEl("div");
+    const row = makeEl("div");
+    const copy = makeEl("div");
+    copy.textContent = item.row;
+    const switchBtn = makeEl("button");
+    switchBtn.className = "bt-soft";
+    switchBtn.textContent = item.action;
+    switchBtn.addEventListener("click", () => {
+      switchClicks += 1;
+      // 模拟 ds-bot 切换完成：Bot 界面标记消失、经典界面的 .bt-return 出现
+      env.matches.delete(".bt-account, .bt-side-top");
+      env.matches.delete(".bt-account");
+      env.matches.set(".bt-return", makeEl("button"));
+    });
+    row._selectors = { ".bt-set-copy": copy, "button.bt-soft": [switchBtn] };
+    scroll._selectors = { ".bt-set-row": [row] };
+
+    env.win.location = {
+      reload() {
+        reloads += 1;
+      },
+    };
+    env.matches.set(".bt-account, .bt-side-top", account);
+    env.matches.set(".bt-account", account);
+    env.matches.set(".bt-account-menu", [menu]);
+    env.matches.set(".bt-settings-scroll", scroll);
+
+    const app = apply(await loadClient(env, item.tag));
+    try {
+      assert.equal(env.win.__botToggle.status().mode, "bot", "初始应识别为 Bot 界面");
+      await env.win.__botToggle.switchTo("classic");
+      assert.equal(switchClicks, 1, "应点击设置页里的切换按钮");
+      assert.equal(reloads, 0, "不应走整页刷新兜底");
+      assert.equal(env.win.localStorage.getItem("ds-bot:surface"), null, "不应写兜底存储键");
+      assert.equal(env.win.__botToggle.status().mode, "classic");
+    } finally {
+      app.dispose();
+    }
+  }
+});
