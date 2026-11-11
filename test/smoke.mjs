@@ -14,6 +14,7 @@ function makeEl(tag) {
   const listeners = {};
   return {
     tagName: tag,
+    id: "",
     children: [],
     parentNode: null,
     className: "",
@@ -74,15 +75,31 @@ function makeEl(tag) {
   };
 }
 
-function makeEnv({ lang = "en-US", bootEntries = null } = {}) {
+function makeEnv({ lang = "en-US", bootEntries = null, platform = "Win32" } = {}) {
   const matches = new Map();
+  const created = [];
+  const docListeners = new Map();
   const doc = {
     documentElement: { lang },
     head: makeEl("head"),
     body: makeEl("body"),
-    createElement: (tag) => makeEl(tag),
-    addEventListener() {},
-    removeEventListener() {},
+    createElement: (tag) => {
+      const el = makeEl(tag);
+      created.push(el);
+      return el;
+    },
+    // 0.4.3 起 client.js 用 getElementById 管理临时样式节点（隐身模式）
+    getElementById: (id) => created.find((el) => el.id === id) ?? null,
+    addEventListener(type, fn) {
+      const list = docListeners.get(type) || [];
+      list.push(fn);
+      docListeners.set(type, list);
+    },
+    removeEventListener(type, fn) {
+      const list = docListeners.get(type) || [];
+      const index = list.indexOf(fn);
+      if (index >= 0) list.splice(index, 1);
+    },
     querySelector(selector) {
       return matches.get(selector) ?? null;
     },
@@ -101,7 +118,7 @@ function makeEnv({ lang = "en-US", bootEntries = null } = {}) {
     __DSH_BOOT__: bootEntries ? { entries: bootEntries } : undefined,
     dshBot: undefined,
     document: doc,
-    navigator: { language: lang },
+    navigator: { language: lang, platform },
     innerWidth: 1440,
     innerHeight: 900,
     localStorage: {
@@ -116,7 +133,21 @@ function makeEnv({ lang = "en-US", bootEntries = null } = {}) {
     addEventListener() {},
     removeEventListener() {},
   };
-  return { win, doc, matches };
+  // 模拟一次 keydown：返回事件对象，defaultPrevented 即「插件认领了这个键」。
+  function dispatchKey(partial) {
+    const event = {
+      defaultPrevented: false,
+      preventDefault() {
+        this.defaultPrevented = true;
+      },
+      stopPropagation() {},
+      ...partial,
+    };
+    for (const fn of [...(docListeners.get("keydown") || [])]) fn(event);
+    return event;
+  }
+
+  return { win, doc, matches, dispatchKey };
 }
 
 // 每次用不同的 query 导入，拿到全新的模块实例，避免桩状态跨用例串味。
@@ -257,4 +288,43 @@ test("卸载清理：DOM 与调试对象都移除", async () => {
   assert.equal(findPill(env.doc), null, "胶囊应被移除");
   assert.equal(env.doc.head.children.length, 0, "样式应被移除");
   assert.equal(env.win.__botToggle, undefined, "调试对象应被移除");
+});
+
+// 快捷键回归：macOS 的 Option 会改写输入字符（⌥⇧B 的 event.key 是 "ı" 而不是 "B"），
+// 旧实现按 event.key 判定，所以快捷键只在 Windows 好使。现在按物理键位 event.code 判定。
+test("快捷键：Windows 上 Alt+Shift+B 生效，其它组合不认", async () => {
+  const env = makeEnv({ lang: "zh-CN", platform: "Win32" });
+  const app = apply(await loadClient(env, "hotkey-win"));
+  try {
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyB", key: "b" }).defaultPrevented, true);
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyB", key: "B" }).defaultPrevented, true);
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: false, code: "KeyB", key: "b" }).defaultPrevented, false);
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyX", key: "x" }).defaultPrevented, false);
+    assert.equal(env.dispatchKey({ metaKey: true, shiftKey: true, code: "KeyB", key: "b" }).defaultPrevented, false);
+    assert.equal(env.dispatchKey({ ctrlKey: true, altKey: true, shiftKey: true, code: "KeyB", key: "b" }).defaultPrevented, false);
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyB", key: "b", repeat: true }).defaultPrevented, false);
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyB", key: "b", isComposing: true }).defaultPrevented, false);
+  } finally {
+    app.dispose();
+  }
+});
+
+test("快捷键：macOS 上 ⌥⇧B（key 变成 ı）与 ⌘⇧B 都生效，提示文案为 mac 写法", async () => {
+  const env = makeEnv({ lang: "zh-CN", platform: "MacIntel" });
+  const app = apply(await loadClient(env, "hotkey-mac"));
+  try {
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyB", key: "ı" }).defaultPrevented, true);
+    assert.equal(env.dispatchKey({ metaKey: true, shiftKey: true, code: "KeyB", key: "B" }).defaultPrevented, true);
+    // 没有 code 的老环境：退回字符判定，mac 组合后的字符也要认
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, key: "ı" }).defaultPrevented, true);
+    assert.equal(env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyX", key: "x" }).defaultPrevented, false);
+
+    const pill = findPill(env.doc);
+    const buttons = pill.children.filter((child) => child.tagName === "button");
+    buttons[0].dispatch("mouseenter");
+    const tip = pill.children.find((child) => child.className === "dsst-tip");
+    assert.equal(tip.textContent, "Bot 界面 · ⌥⇧B / ⌘⇧B 切换");
+  } finally {
+    app.dispose();
+  }
 });

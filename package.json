@@ -1,6 +1,6 @@
 {
   "name": "dsh-bot-toggle",
-  "version": "0.4.1",
+  "version": "0.4.4",
   "description": "A floating Bot / ADE switch for the DSH web UI: toggles ds-bot's Bot surface and the classic DSH surface without unloading ds-bot.",
   "license": "MIT",
   "author": "JackWoods-code",
@@ -53,7 +53,9 @@
     "compatibility": {
       "dshReleases": {
         "0.2.1-rc.2": "compatible",
-        "0.2.1-rc.3": "compatible"
+        "0.2.1-rc.3": "compatible",
+        "0.2.1-rc.4": "compatible",
+        "0.2.2-rc.1": "compatible"
       }
     }
   },
