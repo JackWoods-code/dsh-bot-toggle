@@ -31,6 +31,9 @@ It is a UI layer on top of ds-bot, not a replacement for it: ds-bot keeps runnin
 - ds-bot compatibility probe: reports whether ds-bot is loaded and, when obtainable, its version;
   if ds-bot's controls are missing, the capsule turns amber with an explanation instead of
   silently disappearing
+- Stays out of the way during boot animations: while dsh-boot-suite's full-screen splash overlay
+  (`#dsh-startup-root`) is on screen, the capsule and the top-bar entry stay hidden and the
+  shortcut is ignored; they come back within half a second after the splash ends
 
 ## Screenshots
 
