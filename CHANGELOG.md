@@ -4,6 +4,18 @@ All notable changes to this project. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.5] — 2026-11-12
+
+### Fixed
+
+- **Boot animation overlay**: `dsh-boot-suite` injects its full-screen splash overlay
+  (`#dsh-startup-root`, `z-index: 2147483000`) while the page is still parsing, before
+  client plugins mount. The pill uses the same `z-index` and is appended to `body` later,
+  so it floated above the boot animation. The plugin now keeps the pill hidden and skips
+  the top-bar entry while that overlay is present, then restores itself within one 500 ms
+  refresh tick after the splash removes the overlay. Also ignores the switch hotkey
+  during the splash so a keystroke cannot cut the animation short.
+
 ## [0.4.4] — 2026-11-11
 
 ### Fixed

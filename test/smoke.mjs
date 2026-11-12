@@ -390,3 +390,41 @@ test("切换：ds-bot 0.3.2 的设置项文案（设置 / Settings）也能走�
     }
   }
 });
+
+// 开机动画回归：dsh-boot-suite 在页面解析阶段注入 #dsh-startup-root（fixed inset:0，
+// z-index 2147483000，与胶囊同层、比胶囊更早进入 DOM）。遮罩在场时胶囊必须隐藏、顶栏
+// 入口不插入；遮罩移除后一个轮询周期内自动恢复。见 LeeRolling/dsh-boot-suite。
+test("开机动画：dsh-boot-suite 遮罩在场时隐藏胶囊与顶栏入口", async () => {
+  const env = makeEnv({ lang: "zh-CN" });
+  const splash = makeEl("div");
+  splash.id = "dsh-startup-root";
+  env.matches.set("#dsh-startup-root", splash);
+
+  // 遮罩期间 ds-bot 已经渲染出界面：只有遮罩判断生效，胶囊才不会被画出来。
+  env.matches.set(".bt-account, .bt-side-top", makeEl("button"));
+  const sideTop = makeEl("div");
+  env.matches.set(".bt-side-top", sideTop);
+
+  const app = apply(await loadClient(env, "splash"));
+  try {
+    const pill = findPill(env.doc);
+    assert.ok(pill, "胶囊应已挂载");
+    await sleep(640);
+    assert.equal(pill.hidden, true, "遮罩在场期间胶囊应隐藏");
+    assert.equal(env.win.__botToggle.status().mounted, false);
+    assert.equal(sideTop.children.length, 0, "遮罩在场期间不应插入顶栏入口");
+    // 遮罩期间按快捷键不应被插件认领，避免把开机动画切走。
+    assert.equal(
+      env.dispatchKey({ altKey: true, shiftKey: true, code: "KeyB", key: "b" }).defaultPrevented,
+      false
+    );
+
+    env.matches.delete("#dsh-startup-root");
+    await sleep(640);
+    assert.equal(pill.hidden, false, "遮罩移除后胶囊应恢复显示");
+    assert.equal(env.win.__botToggle.status().mounted, true);
+    assert.equal(sideTop.children.length, 1, "遮罩移除后应插入顶栏入口");
+  } finally {
+    app.dispose();
+  }
+});
